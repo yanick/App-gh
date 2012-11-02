@@ -31,6 +31,7 @@ sub alias { (
 
 sub invoke {
     my ($pkg, $cmd, @args) = @_;
+    $DB::single = 1;
     local *ARGV = [$cmd, @args];
     my $ret = eval {
         $pkg->dispatch();
