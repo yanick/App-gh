@@ -3,15 +3,14 @@ package App::gh::Command::Search;
 
 use 5.10.0;
 
-use warnings;
 use strict;
+use warnings;
 
 use MooseX::App::Command;
 
 use Moose::Util::TypeConstraints qw/ enum /;
 use Module::Runtime qw/ use_module /;
 
-use Term::ANSIColor qw/ colored /;
 
 extends 'App::gh';
 
