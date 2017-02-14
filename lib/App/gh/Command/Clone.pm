@@ -15,6 +15,8 @@ use MooseX::App::Command;
 
 extends 'App::gh';
 
+with 'App::gh::Role::Git';
+
 parameter project => (
     is            => 'ro',
     documentation => 'project to clone',
@@ -39,6 +41,7 @@ has project_url => (
 );
 
 
+
 # TODO take in the extra args and pass them to clone
 # TODO add the option to clone via https/ssh
 # TODO: -k, --forks     also fetch forks.
@@ -46,9 +49,12 @@ has project_url => (
 sub run {
     my( $self ) = @_;
 
-    exec qw/ git clone /,
+    $self->git->clone( 
         $self->project_url,
-        @{ $self->extra_argv };
+        @{ $self->extra_argv || [] }
+    );
+
+    $self->git->print_all;
 }
 
 1;

@@ -1,3 +1,7 @@
+# TODO merge with `list`
+# gh user yanick -- show all my repos
+# gh user --clone yanick -- clone them all
+
 package App::gh::Command::All;
 use utf8;
 use warnings;

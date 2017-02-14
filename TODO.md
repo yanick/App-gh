@@ -39,7 +39,6 @@ lib/App/gh/Command/
 ├── Commit.pm
 ├── Drop.pm
 ├── Fork.pm
-├── Help.pm
 ├── Import.pm
 ├── Info.pm
 ├── Issue
