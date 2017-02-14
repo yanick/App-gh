@@ -21,8 +21,9 @@ has git => (
 sub git_print_all {
     my $self = shift;
 
-    say for @{ $self->git->out };
-    warn $_, "\n" for @{ $self->git->err };
+    say for @{ $self->git->OUT };
+
+    warn $_, "\n" for @{ $self->git->ERR };
 
 };
 
