@@ -14,7 +14,6 @@ has api => (
     default => sub {
         Net::GitHub::V3->new( maybe ua => $_[0]->api_ua );
     },
-    handles => [ 'search' ],
 );
 
 has api_ua => (
@@ -28,7 +27,7 @@ has api_ua => (
 sub search_repositories {
     my( $self, $args ) = @_;
 
-    $self->search->repositories($args);
+    $self->api->search->repositories($args);
 }
 
 1;
