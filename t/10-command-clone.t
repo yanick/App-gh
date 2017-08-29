@@ -38,7 +38,7 @@ subtest 'just project' => sub {
     App::gh::Command::Clone->new( 
         git     => $fake_git,
         project => 'MoobX',
-        github_user => 'yanick'
+        github_username => 'yanick'
     )->run;
 
     is_deeply \@App::gh::TEST_GIT_EXEC, [ 

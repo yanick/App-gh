@@ -9,7 +9,7 @@ with 'App::gh::API';
 
 app_namespace 'App::gh::Command';
 
-option github_user => (
+option github_username => (
     documentation => 'your github username',
     isa => 'Str',
     is => 'ro',

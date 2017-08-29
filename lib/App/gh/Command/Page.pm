@@ -12,7 +12,7 @@ use MooseX::App::Command;
 
 extends 'App::gh';
 
-with 'App::gh::Role::Git';
+with 'App::gh::Git';
 
 =encoding utf8
 

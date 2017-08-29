@@ -15,7 +15,7 @@ use MooseX::App::Command;
 
 extends 'App::gh';
 
-with 'App::gh::Role::Git';
+with 'App::gh::Git';
 
 parameter project => (
     is            => 'ro',
@@ -33,7 +33,7 @@ has project_url => (
         my $project = $self->project;
 
         unless( -1 < index $project, '/' ) {
-            $project = join '/', $self->github_user, $project;
+            $project = join '/', $self->github_username, $project;
         };
 
         'ssh://git@github.com/' . $project;
