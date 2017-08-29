@@ -36,7 +36,6 @@
 
 lib/App/gh/Command/
 ├── All.pm
-├── Clone.pm
 ├── Commit.pm
 ├── Drop.pm
 ├── Fork.pm
