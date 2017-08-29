@@ -30,4 +30,10 @@ sub search_repositories {
     $self->api->search->repositories($args);
 }
 
+sub list_user_repos {
+    my( $self, $username ) = @_;
+
+    $self->api->repos->list_user($username);
+}
+
 1;

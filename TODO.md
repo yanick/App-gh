@@ -49,7 +49,6 @@ lib/App/gh/Command/
 │   ├── List.pm
 │   └── Show.pm
 ├── Issue.pm
-├── List.pm
 ├── Network.pm
 ├── Page.pm
 ├── Pull.pm
@@ -60,7 +59,6 @@ lib/App/gh/Command/
 ├── Pullreq.pm
 ├── Push.pm
 ├── Recent.pm
-├── Search.pm
 ├── Setup.pm
 ├── Update.pm
 └── Upload.pm
