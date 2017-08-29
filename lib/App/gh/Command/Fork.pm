@@ -1,8 +1,10 @@
 package App::gh::Command::Fork;
 # ABSTRACT: fork a repository
 
-# TODO gh fork  (do it for the current repo)
-# TODO gh fork somebody/project
+# TODO add --add-remote that defaults to true/false depending 
+# if we're forking something related to the current repo
+# (see alter_repo attribute)
+
 # TODO gh fork --clone somebody/project
 
 # TODO allow different protocols
@@ -13,7 +15,22 @@ package App::gh::Command::Fork;
 
 =head1 USAGE
 
-    gh fork yanick/MoobX    
+    gh fork
+    gh fork yanick
+    gh fork yanick/App-gh    
+
+=head1 DESCRIPTION
+
+Without a repo name, will fork the remote tracked
+by the current branch and add the forked repo as a
+new remote.
+
+A parameter without a slash will be taken as the remote
+to fork. 
+
+A parameter with a slash (i.e., "owner/repo") is
+considered to be the repo to fork. In this case no remote
+will be added to the current local repo.
 
 =cut
 
@@ -26,31 +43,76 @@ use MooseX::App::Command;
 
 extends 'App::gh';
 
-option clone => (
-    is  => 'ro',
-    isa => 'Bool',
-    documentation => 'clone your fork locally',
+with 'App::gh::Git';
+
+with 'App::gh::Role::Format' => {
+    formats => [qw/ default json /],
+};
+
+# TODO
+# option clone => (
+#     is  => 'ro',
+#     isa => 'Bool',
+#     documentation => 'also clone the fork locally',
+# );
+
+has alter_repo => (
+    is      => 'rw',
+    default => 0,
 );
 
 parameter repository => (
     is => 'ro',
-    required => 1,
     documentation => 'repo to fork',
 );
 
+sub expanded_repository {
+    my ( $self ) = @_;
+
+    my $name = $self->repository;
+
+    unless( $name ) {
+        my ( $tracking ) = $self->git->RUN( 'status', '-sb' );
+        $self->alter_repo(1);
+
+        return unless $tracking =~ m!##.*?\.\.\.([^/]+)!;
+        $name = $1;
+    }
+
+    if( -1 == index $name, '/' ) {
+        my( $remote )= $self->git->config( '--get', "remote.$name.url" );
+        return unless $remote =~ m#([^:/]+/[^/.]+)(?:\.git)?$#;
+        $name = $1;
+        $self->alter_repo(1);
+    }
+
+    return $name;
+}
+
+sub print_default {
+    my ( $self, $fork ) = @_;
+    
+    $self->render_string(
+        "{{#color 'blue'}}repo forked:{{/color}} {{ html_url }}",
+        $fork
+    );
+}
+
 sub run {
     my $self = shift;
+
+    my $repo = $self->expanded_repository;
+
+    say "forking ", $repo, "...";
     
-    # TODO what if repo doesn't exist?
-    # TODO test - if repo already forked
-    my $fork = $self->api->repos->create_fork( split '/', $self->repository );
+    my $fork = $self->api->repos->create_fork( split '/', $repo );t
 
-    use DDP;
-    p $fork;
+    $self->print_formatted($fork);
 
-    say "repo forked";
-    # TODO provide url
-    # TODO if forking the local repo, add the fork as a remote
+    if( $self->git and $self->alter_repo ) {
+        say sprintf "adding fork as remote '%s'...", $self->github_username;
+        $self->git->remote( 'add', $self->github_username, $fork->{ssh_url} );
+    }
 }
 
 

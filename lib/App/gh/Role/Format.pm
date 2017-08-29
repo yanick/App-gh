@@ -2,6 +2,10 @@ package App::gh::Role::Format;
 
 use MooseX::Role::Parameterized;
 
+use 5.10.0;
+use strict;
+use warnings;
+
 use JSON qw/ to_json /;
 use Moose::Util::TypeConstraints qw/ enum /;
 use IO::Interactive qw/ is_interactive /;
@@ -29,13 +33,13 @@ role {
     requires "print_$_" for grep { $_ ne 'json' } @{ $p->formats };
 
     method print_json => sub {
-        print to_json( $_[1], { pretty => 1, canonical => 1, allow_blessed => 1 } );
+        to_json( $_[1], { pretty => 1, canonical => 1, allow_blessed => 1 } );
     };
 
     method print_formatted => sub {
         my $self = shift;
         my $method = 'print_' . $self->format;
-        $self->$method(@_);
+        say $self->$method(@_);
     };
 
     has handlebars => (

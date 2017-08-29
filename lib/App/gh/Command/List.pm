@@ -29,8 +29,8 @@ parameter username => (
 sub print_summary {
     my( $self, $repos ) = @_;
 
-    say $self->render_string( $self->summary_entry, $_) 
-        for @$repos;
+    return join "\n", map {  $self->render_string( $self->summary_entry, $_) }
+        @$repos;
 };
 
 # TODO read again if there are more
