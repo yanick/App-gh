@@ -34,9 +34,7 @@
     gh fetch gugod
 
 
-lib/App/gh/Command/
 ├── All.pm
-├── Commit.pm
 ├── Drop.pm
 ├── Fork.pm
 ├── Import.pm
@@ -48,17 +46,12 @@ lib/App/gh/Command/
 │   └── Show.pm
 ├── Issue.pm
 ├── Network.pm
-├── Page.pm
 ├── Pull.pm
 ├── Pullreq
 │   ├── List.pm
 │   ├── Send.pm
 │   └── Show.pm
 ├── Pullreq.pm
-├── Push.pm
 ├── Recent.pm
 ├── Setup.pm
-├── Update.pm
 └── Upload.pm
-
-2 directories, 27 files
