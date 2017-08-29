@@ -12,7 +12,10 @@ has api => (
     is	    => 'ro',
     lazy => 1,
     default => sub {
-        Net::GitHub::V3->new( maybe ua => $_[0]->api_ua );
+        Net::GitHub::V3->new( 
+            maybe ua => $_[0]->api_ua ,
+            eval { %{ $_[0]->_config_data->{global}{auth} } },
+        );
     },
 );
 
