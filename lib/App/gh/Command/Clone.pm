@@ -1,64 +1,77 @@
 package App::gh::Command::Clone;
-use warnings;
+# ABSTRACT: clone repository
+
+# TODO   gh clone yanick/MoobX
+# TODO   gh clone MoobX
+  
+use 5.10.0;
+
 use strict;
-use base qw(App::gh::Command);
-use File::Basename;
-use App::gh::Utils qw(
-generate_repo_uri 
-build_git_clone_command
-run_git_fetch
+use warnings;
+
+use Git::Wrapper;
+
+use MooseX::App::Command;
+
+extends 'App::gh';
+
+parameter project => (
+    is            => 'ro',
+    documentation => 'project to clone',
+    required      => 1,
 );
-use App::gh;
+# TODO coerce url from name (and error if no good)
 
-=encoding utf8
+has project_url => (
+    is   => 'ro',
+    lazy => 1,
+    default => sub {
+        my $self = shift;
 
-=head1 NAME
+        my $project = $self->project;
 
-App::gh::Command::Clone - clone repository
+        unless( -1 < index $project, '/' ) {
+            $project = join '/', $self->github_user, $project;
+        };
+
+        'ssh://git@github.com/' . $project;
+    },
+);
+
+
+# TODO take in the extra args and pass them to clone
+# TODO add the option to clone via https/ssh
+# TODO: -k, --forks     also fetch forks.
+
+sub run {
+    my( $self ) = @_;
+
+    exec qw/ git clone /,
+        $self->project_url,
+        @{ $self->extra_argv };
+}
+
+1;
+
+__END__
+
 
 =head1 DESCRIPTION
 
-balh
+Clones a GitHub repository. The target repo can
+either be of the form 'C<user/project>' or 'C<project>',
+in which case it will be assumed to be yours.
 
-=head1 OPTIONS
+Options types after a double-dash (C<-->) will b
+e passed to the underlying C<git clone> command 
+directly.  E.g.,
 
-    -q, --quiet
-    --verbose
-    --ssh
-    --http
-    --https
-    --git|ro
-    -k, --forks     also fetch forks.
+    gh clone MoobX -- --origin mine
 
-Git Options:
-
-    -b | --branch    clone specific branch.
-    --origin
-    --recursive, --recurse-submodules
-
-        After the clone is created, initialize all submodules within, using their default settings.
-        This is equivalent to running git submodule update --init --recursive immediately after the
-        clone is finished. This option is ignored if the cloned repository does not have a
-        worktree/checkout (i.e. if any of --no-checkout/-n, --bare, or --mirror is given)
-
-        See `git help clone`
 
 =cut
 
-sub options { (
-    "verbose" => "verbose",
-    "ssh" => "protocol_ssh",    # git@github.com:c9s/repo.git
-    "http" => "protocol_http",  # http://github.com/c9s/repo.git
-    "https" => "protocol_https",         # https://github.com/c9s/repo.git
-    "git|ro"   => "protocol_git",        # git://github.com/c9s/repo.git
-    "k|forks|fork"  => 'with_fork',
-    "b|bare" => "bare",
-    "b|branch=s" => "branch",
-    "mirror"     => "mirror",
-    "recursive"  => "recursive",
-    "origin"     => "origin",
-) }
-
+__END__
 
 sub run {
     my $self = shift;
