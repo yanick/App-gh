@@ -35,7 +35,6 @@
 
 
 ├── All.pm
-├── Drop.pm
 ├── Import.pm
 ├── Info.pm
 ├── Issue
@@ -44,7 +43,6 @@
 │   ├── List.pm
 │   └── Show.pm
 ├── Issue.pm
-├── Network.pm
 ├── Pull.pm
 ├── Pullreq
 │   ├── List.pm

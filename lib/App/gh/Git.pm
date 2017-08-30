@@ -28,6 +28,21 @@ sub git_print_all {
 
 };
 
+sub git_tracking_remote {
+    my $self = shift;
+
+    my ( $tracking ) = $self->git->RUN( 'status', '-sb' );
+
+    return unless $tracking =~ m!##.*?\.\.\.([^/]+)!;
+    my $name = $1;
+
+    my( $remote )= $self->git->config( '--get', "remote.$name.url" );
+    return unless $remote =~ m#([^:/]+/[^/.]+)(?:\.git)?$#;
+    $name = $1;
+
+    return $name;
+}
+
 
 1;
 
